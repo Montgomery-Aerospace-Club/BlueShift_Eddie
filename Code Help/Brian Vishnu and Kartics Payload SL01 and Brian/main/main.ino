@@ -45,47 +45,49 @@ void setup() {
     while (!Serial) {}
 
 
-    SD_INIT();
+    SD_INIT(spi);
     MCP9600_INIT();
 
     SL01.begin();
 
+    while(true){
+        long time = millis();
+        float uv=0;
 
+
+        SL01.poll();
+        uv = SL01.getUVIndex();
+        Serial.print("UVB Index: ");
+        Serial.println(uv);
+
+        float mcpfloat = mcp.readAmbient()
+
+        Serial.print("Cold Junction: "); 
+        Serial.println(mcpfloat);
+        Serial.println();
+
+
+        String uvStr = String(uv,3);
+        String mcpStr = String(mcpfloat,3);
+
+        String data = "";
+        data += String(time);
+        data += ",";
+        data += uvStr;
+        data += ",";
+        data += mcpStr;
+        data += "\n";
+
+        appendFile(SD, "/data.txt", data.c_str());
+
+        delay(DELAY_TIME);
+    }
    
 }
 
 void loop() {
 
-    long time = millis();
-    float uv=0;
-
-
-    SL01.poll();
-    uv = SL01.getUVIndex();
-    Serial.print("UVB Index: ");
-    Serial.println(uv);
-
-    float mcpfloat = mcp.readAmbient()
-
-    Serial.print("Cold Junction: "); 
-    Serial.println(mcpfloat);
-    Serial.println();
-
-
-    String uvStr = String(uv,3);
-    String mcpStr = String(mcpfloat,3);
-
-    String data = "";
-    data += String(time);
-    data += ",";
-    data += uvStr;
-    data += ",";
-    data += mcpStr;
-    data += "\n";
-
-    appendFile(SD, "/data.txt", data.c_str());
-
-    delay(DELAY_TIME);
+   
 }
 
 void writeFile(fs::FS &fs, const char * path, const char * message) {
@@ -161,7 +163,7 @@ void MCP9600_INIT(){
 
 }
 
-void SD_INIT(){
+void SD_INIT(SPIClass spi){
     if (!SD.begin(SD_CS, spi,80000000)) {
         Serial.println(F("Card Mount Failed"));
         return;
