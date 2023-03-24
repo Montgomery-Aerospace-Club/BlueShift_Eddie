@@ -32,16 +32,11 @@ String header = "time(ms),lux,UVAIntensity(uW/m^2),UVBIntensity,UVindex,temp(C),
 
 void setup() {
   Serial.begin(115200);
-// while (!Serial){
-//    
-//  }
+
   Wire.setPins(I2C_SDA, I2C_SCL);
   Wire.begin();
   SG35.begin();
 
-  //if(!SG33.begin()){
-    //Serial.println("please help me Co2");
-  //}
   if(!SW01.begin()){
     Serial.println("please help me weather");
   }

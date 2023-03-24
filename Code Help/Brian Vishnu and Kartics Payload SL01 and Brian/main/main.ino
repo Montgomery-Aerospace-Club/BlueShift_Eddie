@@ -38,13 +38,6 @@ void setup() {
     SPIClass spi = SPIClass(HSPI);
     spi.begin(SPI_SCK, SPI_MISO, SPI_MOSI, SD_CS);  
 
-
-
-    //makes sure serial is open 
-    // DELETE BEFORE PUTTING INTO PAYLOAD BOXX
-    while (!Serial) {}
-
-
     SD_INIT(spi);
     MCP9600_INIT();
 
